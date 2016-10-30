@@ -6,12 +6,14 @@ namespace app\service {
     {
         public static $DISQUS_SECRET_KEY = false;
         public static $DISQUS_PUBLIC_KEY = false;
+        public static $SHORTNAME = false;
 
         public static function rx_setup()
         {
             $config = \Config::get("DISQUS_CONFIG");
             self::$DISQUS_PUBLIC_KEY = $config["api_key"];
             self::$DISQUS_SECRET_KEY = $config["api_secret"];
+            self::$SHORTNAME = $config["shortname"];
         }
 
         public static function dsq_hmacsha1($data, $key)
@@ -58,7 +60,8 @@ namespace app\service {
                 "timestamp" => $timestamp,
                 "hmac" => self::dsq_hmacsha1($message . ' ' . $timestamp, self::$DISQUS_SECRET_KEY),
                 "api_key" => self::$DISQUS_PUBLIC_KEY,
-                "api_secret" => self::$DISQUS_SECRET_KEY
+                "api_secret" => self::$DISQUS_SECRET_KEY,
+                "shortname" => self::$SHORTNAME
             );
         }
 
