@@ -7,6 +7,11 @@ namespace app\service {
         public static $DISQUS_SECRET_KEY = false;
         public static $DISQUS_PUBLIC_KEY = false;
         public static $SHORTNAME = false;
+        public static $MESSAGE = null;
+        public static $TIMESTAMP = null;
+        public static $HMAC = null;
+        public static $CONFIG_JS_FILE = "nojs.js";
+
 
         public static function rx_setup()
         {
@@ -14,6 +19,7 @@ namespace app\service {
             self::$DISQUS_PUBLIC_KEY = $config["api_key"];
             self::$DISQUS_SECRET_KEY = $config["api_secret"];
             self::$SHORTNAME = $config["shortname"];
+            self::define_vars();
         }
 
         public static function dsq_hmacsha1($data, $key)
@@ -36,36 +42,44 @@ namespace app\service {
             );
             return bin2hex($hmac);
         }
+
         public static function auth($user_id, $penname, $email)
         {
             $_SESSION['disqus_user_id'] = $user_id;
             $_SESSION['disqus_penname'] = $penname;
             $_SESSION['disqus_email'] = $email;
+
+            $data = array(
+                "id" => isset($_SESSION['disqus_user_id']) ? $_SESSION['disqus_user_id'] : -1,
+                "username" => isset($_SESSION['disqus_penname']) ? $_SESSION['disqus_penname'] : "guest",
+                "email" => isset($_SESSION['disqus_email']) ? $_SESSION['disqus_email'] : "guest@guest"
+            );
+            $_SESSION['disqus_MESSAGE'] = base64_encode(json_encode($data));
+            $_SESSION['disqus_TIMESTAMP'] = time();
+            $_SESSION['disqus_HMAC'] = self::dsq_hmacsha1(self::$MESSAGE . ' ' . self::$TIMESTAMP, self::$DISQUS_SECRET_KEY);
+            self::define_vars();
+        }
+
+        public static function define_vars()
+        {
+            self::$MESSAGE = isset($_SESSION['disqus_MESSAGE']) ? $_SESSION['disqus_MESSAGE'] : "disqus_MESSAGE";
+            self::$TIMESTAMP = isset($_SESSION['disqus_TIMESTAMP']) ? $_SESSION['disqus_TIMESTAMP'] : "disqus_TIMESTAMP";
+            self::$HMAC = isset($_SESSION['disqus_HMAC']) ? $_SESSION['disqus_HMAC'] : "disqus_HMAC";
+            self::$CONFIG_JS_FILE = "api/disqus/".self::$HMAC."/config.js";
         }
 
 
         public static function config()
         {
-            $data = array(
-                "id" => isset($_SESSION['disqus_user_id']) ? $_SESSION['disqus_user_id'] : -1 ,
-                "username" => isset($_SESSION['disqus_penname']) ? $_SESSION['disqus_penname'] : "guest",
-                "email" => isset($_SESSION['disqus_email']) ? $_SESSION['disqus_email'] : "guest@guest"
-            );
-
-            $message = base64_encode(json_encode($data));
-            $timestamp = time();
-
             return array(
-                "message" => $message,
-                "timestamp" => $timestamp,
-                "hmac" => self::dsq_hmacsha1($message . ' ' . $timestamp, self::$DISQUS_SECRET_KEY),
+                "message" => self::$MESSAGE,
+                "timestamp" => self::$TIMESTAMP,
+                "hmac" => self::$HMAC,
                 "api_key" => self::$DISQUS_PUBLIC_KEY,
                 "api_secret" => self::$DISQUS_SECRET_KEY,
                 "shortname" => self::$SHORTNAME
             );
         }
-
-
     }
 
     Disqus::rx_setup();
