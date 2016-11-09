@@ -10,7 +10,7 @@ namespace app\service {
 
         public static function rx_setup()
         {
-            $config = \Config::get("DISQUS_CONFIG");
+            $config = \Config::getSection("DISQUS_CONFIG");
             self::$DISQUS_PUBLIC_KEY = $config["api_key"];
             self::$DISQUS_SECRET_KEY = $config["api_secret"];
             self::$SHORTNAME = $config["shortname"];
