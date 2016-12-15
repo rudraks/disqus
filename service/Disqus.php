@@ -25,22 +25,22 @@ namespace app\service {
 
         public static function dsq_hmacsha1($data, $key)
         {
-            $blocksize = 64;
-            $hashfunc = 'sha1';
-            if (strlen($key) > $blocksize)
-                $key = pack('H*', $hashfunc($key));
-            $key = str_pad($key, $blocksize, chr(0x00));
-            $ipad = str_repeat(chr(0x36), $blocksize);
-            $opad = str_repeat(chr(0x5c), $blocksize);
+            $blocksize=64;
+            $hashfunc='sha1';
+            if (strlen($key)>$blocksize)
+                $key=pack('H*', $hashfunc($key));
+            $key=str_pad($key,$blocksize,chr(0x00));
+            $ipad=str_repeat(chr(0x36),$blocksize);
+            $opad=str_repeat(chr(0x5c),$blocksize);
             $hmac = pack(
-                'H*', $hashfunc(
-                    ($key ^ $opad) . pack(
-                        'H*', $hashfunc(
-                            ($key ^ $ipad) . $data
+                        'H*',$hashfunc(
+                            ($key^$opad).pack(
+                                'H*',$hashfunc(
+                                    ($key^$ipad).$data
+                                )
+                            )
                         )
-                    )
-                )
-            );
+                    );
             return bin2hex($hmac);
         }
 
@@ -59,7 +59,7 @@ namespace app\service {
             );
             $_SESSION['disqus_MESSAGE'] = base64_encode(json_encode($data));
             $_SESSION['disqus_TIMESTAMP'] = time();
-            $_SESSION['disqus_HMAC'] = self::dsq_hmacsha1(self::$MESSAGE . ' ' . self::$TIMESTAMP, self::$DISQUS_SECRET_KEY);
+            $_SESSION['disqus_HMAC'] = self::dsq_hmacsha1($_SESSION['disqus_MESSAGE'] . ' ' . $_SESSION['disqus_TIMESTAMP'], self::$DISQUS_SECRET_KEY);
             self::define_vars();
         }
 
