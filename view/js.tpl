@@ -1,3 +1,4 @@
+//{$disqus_config.CREDITS}
 var disqus_config = function () {literal}{{/literal}
 this.page.remote_auth_s3 = "{$disqus_config.message} {$disqus_config.hmac} {$disqus_config.timestamp}";
 this.page.api_key = "{$disqus_config.api_key}";

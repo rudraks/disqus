@@ -10,6 +10,7 @@ namespace app\service {
         public static $MESSAGE = null;
         public static $TIMESTAMP = null;
         public static $HMAC = null;
+        public static $CREDITS = null;
         public static $CONFIG_JS_FILE = "nojs.js";
 
 
@@ -49,6 +50,8 @@ namespace app\service {
             $_SESSION['disqus_penname'] = $penname;
             $_SESSION['disqus_email'] = $email;
 
+            //echo "====".$_SESSION['disqus_user_id']."==".$_SESSION['disqus_penname']."===". $_SESSION['disqus_email'];
+
             $data = array(
                 "id" => isset($_SESSION['disqus_user_id']) ? $_SESSION['disqus_user_id'] : -1,
                 "username" => isset($_SESSION['disqus_penname']) ? $_SESSION['disqus_penname'] : "guest",
@@ -62,6 +65,7 @@ namespace app\service {
 
         public static function define_vars()
         {
+            self::$CREDITS = isset($_SESSION['disqus_user_id']) ? ($_SESSION['disqus_user_id']."=".$_SESSION['disqus_penname']."=". $_SESSION['disqus_email']) : "disqus_MESSAGE";
             self::$MESSAGE = isset($_SESSION['disqus_MESSAGE']) ? $_SESSION['disqus_MESSAGE'] : "disqus_MESSAGE";
             self::$TIMESTAMP = isset($_SESSION['disqus_TIMESTAMP']) ? $_SESSION['disqus_TIMESTAMP'] : "disqus_TIMESTAMP";
             self::$HMAC = isset($_SESSION['disqus_HMAC']) ? $_SESSION['disqus_HMAC'] : "disqus_HMAC";
@@ -72,6 +76,7 @@ namespace app\service {
         public static function config()
         {
             return array(
+                "CREDITS" => self::$CREDITS,
                 "message" => self::$MESSAGE,
                 "timestamp" => self::$TIMESTAMP,
                 "hmac" => self::$HMAC,
