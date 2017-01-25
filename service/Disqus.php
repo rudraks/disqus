@@ -70,6 +70,7 @@ namespace app\service {
             self::$TIMESTAMP = isset($_SESSION['disqus_TIMESTAMP']) ? $_SESSION['disqus_TIMESTAMP'] : "disqus_TIMESTAMP";
             self::$HMAC = isset($_SESSION['disqus_HMAC']) ? $_SESSION['disqus_HMAC'] : "disqus_HMAC";
             self::$CONFIG_JS_FILE = "api/disqus/".self::$HMAC."/config.js";
+            setcookie("disqus_HMAC",  self::$HMAC, time() + (86400 * 30), "/");
         }
 
 
