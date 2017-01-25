@@ -8,20 +8,25 @@ namespace app\controller {
     class DisqusController extends AbstractController
     {
         /**
-         * @RequestMapping(url="api/disqus/{hmac}/config.js",type="template")
+         * @RequestMapping(url="api/disqus/{hmac}/config.js{counter}",type="template")
          * @RequestParams(true)
          */
-        public function cloudinary_configjs($model, $hmac)
+        public function cloudinary_configjs($model, $hmac,$counter=1)
         {
             header("Content-type: text/javascript");
             \app\service\Smarty::setTemplateDir(dirname(__FILE__) . "/../view/");
+
+            echo "//=|".Disqus::$HMAC.$_SESSION['disqus_penname'];
+
             if ($hmac == Disqus::$HMAC) {
                 $model->assign("disqus_config", Disqus::config());
-            } else {
-                $this->header("HTTP/1.0","404 Not Found");
-                exit();
+                return "js";
+            } 
+            if($counter!=2){
+               return "js2";
             }
-            return "js";
+            //$this->header("HTTP/1.0","404 Not Found");
+            exit();
         }
 
         /**
