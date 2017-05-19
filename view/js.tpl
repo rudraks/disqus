@@ -2,7 +2,7 @@
 var disqus_config = function () {literal}{{/literal}
 this.page.remote_auth_s3 = "{$disqus_config.message} {$disqus_config.hmac} {$disqus_config.timestamp}";
 this.page.api_key = "{$disqus_config.api_key}";
-{foreach from=$disqus_config.extra item=value key=key}
+{foreach from=$disqus_config.page item=value key=key}
 	this.page.{$key} = "{$value}";
 {/foreach}
 {literal}};
