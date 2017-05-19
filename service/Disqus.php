@@ -12,6 +12,8 @@ namespace app\service {
         public static $HMAC = null;
         public static $CREDITS = null;
         public static $CONFIG_JS_FILE = "nojs.js";
+        public static $PAGE = array(
+        );
 
 
         public static function rx_setup()
@@ -83,7 +85,8 @@ namespace app\service {
                 "hmac" => self::$HMAC,
                 "api_key" => self::$DISQUS_PUBLIC_KEY,
                 "api_secret" => self::$DISQUS_SECRET_KEY,
-                "shortname" => self::$SHORTNAME
+                "shortname" => self::$SHORTNAME,
+                "page" => self::$PAGE
             );
         }
     }
