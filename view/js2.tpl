@@ -11,6 +11,6 @@
   if(document.cookie.indexOf('disqus_HMAC') > -1 ) {
       injectScript("/api/disqus/"+getCookie('disqus_HMAC')+"/config.js2");
   }
-  return 
+  return true;
 })());
 {/literal}
