@@ -16,7 +16,7 @@ namespace app\controller {
             header("Content-type: text/javascript");
             \app\service\Smarty::setTemplateDir("/../view/");
 
-            echo "//=|".Disqus::$HMAC.$_SESSION['disqus_penname'];
+            echo "/*=|".Disqus::$HMAC.$_SESSION['disqus_penname']."*/";
 
             if ($hmac == Disqus::$HMAC) {
                 $model->assign("disqus_config", Disqus::config());
