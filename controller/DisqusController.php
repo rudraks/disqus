@@ -14,7 +14,7 @@ namespace app\controller {
         public function cloudinary_configjs($model, $hmac,$counter=1)
         {
             header("Content-type: text/javascript");
-            \app\service\Smarty::setTemplateDir(dirname(__FILE__) . "/../view/");
+            \app\service\Smarty::setTemplateDir("/../view/");
 
             echo "//=|".Disqus::$HMAC.$_SESSION['disqus_penname'];
 
@@ -36,7 +36,7 @@ namespace app\controller {
         public function cloudinary_configjs_old($model)
         {
             header("Content-type: text/javascript");
-            \app\service\Smarty::setTemplateDir(dirname(__FILE__) . "/../view/");
+            \app\service\Smarty::setTemplateDir("/../view/");
             $model->assign("disqus_config", Disqus::config());
             return "js";
         }
